@@ -1,63 +1,79 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
   "info": {
-    "title": "Pokedex - OpenAPI 3.0",
-    "description": "This is a Pokedex API",
-    "version": "1.0.11"
+    "title": "FastAPI",
+    "version": "0.1.0"
   },
-  "servers": [
-    {
-      "url": "https://ryanarj.github.io/rarjun.github.io/apis"
-    }
-  ],
-  "tags": [
-    {
-      "name": "pokemon",
-      "description": "Everything about pokemons"
-    }
-  ],
   "paths": {
-    "/pokemon/{pokemonId}": {
+    "/pokemon/{pokemon_id}": {
       "get": {
-        "tags": [
-          "pokemon"
-        ],
-        "summary": "Find pokemon by ID",
-        "description": "Returns a single pokemon",
-        "operationId": "getPokemonById",
+        "summary": "Get Pokemon",
+        "operationId": "get_pokemon_pokemon__pokemon_id__get",
         "parameters": [
           {
-            "name": "pokemonId",
+            "name": "pokemon_id",
             "in": "path",
-            "description": "ID of pokemon to return",
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "title": "Pokemon Id"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Pokemon"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/Pokemon"
-                }
+                "schema": {}
               }
             }
           },
-          "400": {
-            "description": "Invalid ID supplied"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pokemon": {
+      "post": {
+        "summary": "Add Pokemon",
+        "operationId": "add_pokemon_pokemon_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pokemon"
+              }
+            }
           },
-          "404": {
-            "description": "pokemon not found"
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
           }
         }
       }
@@ -65,109 +81,119 @@
   },
   "components": {
     "schemas": {
-      "Pokemon": {
-        "required": [
-          "name",
-          "type_1",
-          "type_2"
-        ],
-        "type": "object",
+      "HTTPValidationError": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
-          },
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Pokemon": {
+        "properties": {
           "name": {
             "type": "string",
-            "example": "pikachu"
+            "title": "Name"
           },
           "type_1": {
             "type": "string",
-            "example": "water"
+            "title": "Type 1"
           },
           "type_2": {
             "type": "string",
-            "example": "water"
+            "title": "Type 2"
           },
-          "hp": {
+          "total": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
+            "title": "Total"
           },
           "attack": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
+            "title": "Attack"
+          },
+          "hp": {
+            "type": "integer",
+            "title": "Hp"
           },
           "defense": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
+            "title": "Defense"
           },
           "sp_atk": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
+            "title": "Sp Atk"
           },
           "sp_def": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
-          },
-          "generation": {
-            "type": "integer",
-            "format": "int64",
-            "example": 1
+            "title": "Sp Def"
           },
           "speed": {
             "type": "integer",
-            "format": "int64",
-            "example": 10
+            "title": "Speed"
+          },
+          "generation": {
+            "type": "integer",
+            "title": "Generation"
           },
           "legendary": {
             "type": "boolean",
-            "example": false
+            "title": "Legendary"
           }
         },
-        "xml": {
-          "name": "pokemon"
-        }
-      },
-      "ApiResponse": {
         "type": "object",
+        "required": [
+          "name",
+          "type_1",
+          "type_2",
+          "total",
+          "attack",
+          "hp",
+          "defense",
+          "sp_atk",
+          "sp_def",
+          "speed",
+          "generation",
+          "legendary"
+        ],
+        "title": "Pokemon"
+      },
+      "ValidationError": {
         "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
           },
           "type": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
+            "type": "string",
+            "title": "Error Type"
           }
         },
-        "xml": {
-          "name": "##default"
-        }
-      }
-    },
-    "requestBodies": {
-      "pokemon": {
-        "description": "pokemon object that needs to be added",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Pokemon"
-            }
-          },
-          "application/xml": {
-            "schema": {
-              "$ref": "#/components/schemas/Pokemon"
-            }
-          }
-        }
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     }
   }
