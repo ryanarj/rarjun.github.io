@@ -10854,7 +10854,7 @@
         "defense": 0,
         "sp_atk": 0,
         "sp_def": 0,
-        "speed": 0,
+        "speed": 1,
         "generation": 0,
         "legendary": true,
         "Id": 724
